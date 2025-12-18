@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio al Cliente - MS</title>
+    <!-- Enlace a los estilos específicos del chat -->
+    <link rel="stylesheet" href="chat_styles.css">
+    <!-- FontAwesome para iconos (avión de papel, robot) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ <link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+
+    <header class="chat-header">
+        <a href="tienda virtual.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver a la Tienda</a>
+        <h1>MS - Soporte Virtual</h1>
+    </header>
+
+    <main class="chat-layout">
+        <section class="chat-intro">
+            <h2>¿En qué podemos ayudarte?</h2>
+            <p>Nuestro asistente virtual está disponible 24/7 para resolver tus dudas sobre productos, envíos y garantías.</p>
+            <div class="status-indicator">
+                <span class="dot"></span> En línea
+            </div>
+        </section>
+
+        <section class="chat-interface">
+            <!-- Área de mensajes -->
+            <div class="chat-window" id="chatWindow">
+                <div class="message bot-message">
+                    <div class="avatar"><i class="fas fa-robot"></i></div>
+                    <div class="text">
+                        Hola, bienvenido a <strong>Multi Service (MS)</strong>. Soy tu asistente virtual. <br><br>
+                        ¿En qué puedo ayudarte hoy?
+                    </div>
+                </div>
+                <!-- Sugerencias de preguntas (Sugerencia implementada) -->
+                <div class="quick-actions">
+                    <button onclick="sendQuickMessage('¿Hacen envíos?')">🚚 Envíos</button>
+                    <button onclick="sendQuickMessage('¿Qué métodos de pago aceptan?')">💳 Pagos</button>
+                    <button onclick="sendQuickMessage('¿Dónde están ubicados?')">📍 Ubicación</button>
+                    <button onclick="sendQuickMessage('Quiero hablar con un humano')">👤 Asesor</button>
+                </div>
+            </div>
+
+            <!-- Área de escritura -->
+            <div class="chat-input-area">
+                <input type="text" id="userInput" placeholder="Escribe tu consulta aquí..." onkeypress="handleEnter(event)">
+                <button onclick="sendMessage()" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const chatWindow = document.getElementById('chatWindow');
+        const userInput = document.getElementById('userInput');
+
+        // Manejar tecla Enter
+        function handleEnter(event) {
+            if (event.key === 'Enter') sendMessage();
+        }
+
+        // Enviar mensaje rápido desde botones
+        function sendQuickMessage(text) {
+            userInput.value = text;
+            sendMessage();
+        }
+
+        // Función principal para enviar mensaje
+        function sendMessage() {
+            const text = userInput.value.trim();
+            if (text === "") return;
+
+            // 1. Agregar mensaje del usuario
+            addMessage(text, 'user-message');
+            userInput.value = '';
+
+            // 2. Simular "escribiendo..." y responder
+            setTimeout(() => {
+                const response = getBotResponse(text.toLowerCase());
+                addMessage(response, 'bot-message');
+            }, 600); // Retraso de 0.6 segundos para realismo
+        }
+
+        // Función para agregar burbujas al chat
+        function addMessage(text, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', className);
+
+            let avatarHTML = '';
+            if (className === 'bot-message') {
+                avatarHTML = '<div class="avatar"><i class="fas fa-robot"></i></div>';
+            }
+
+            messageDiv.innerHTML = `
+                ${avatarHTML}
+                <div class="text">${text}</div>
+            `;
+
+            // Insertar antes de los botones de acción rápida si existen, o al final
+            const quickActions = document.querySelector('.quick-actions');
+            if(quickActions) {
+                chatWindow.insertBefore(messageDiv, quickActions);
+            } else {
+                chatWindow.appendChild(messageDiv);
+            }
+            
+            // Auto-scroll hacia abajo
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        // 🧠 CEREBRO DEL CHATBOT (Lógica de respuestas)
+        function getBotResponse(input) {
+            // Lógica simple de palabras clave
+            if (input.includes('hola') || input.includes('buenos') || input.includes('saludos')) {
+                return "¡Hola! ¿Cómo estás? Espero que encuentres lo que buscas en MS.";
+            } 
+            else if (input.includes('envio') || input.includes('envío') || input.includes('delivery')) {
+                return "Realizamos envíos a todo el país 🇩🇴. El costo depende de tu ubicación. En compras mayores a $2,000.";
+            } 
+            else if (input.includes('precio') || input.includes('cuesta') || input.includes('valor')) {
+                return "Los precios están marcados en cada producto de la tienda. Si buscas algo específico, puedes usar la barra de búsqueda en la página principal.";
+            } 
+            else if (input.includes('pago') || input.includes('tarjeta') || input.includes('transferencia')) {
+                return "Aceptamos efectivo 💵, transferencia bancaria y tarjetas de crédito/débito (Visa y MasterCard).";
+            } 
+            else if (input.includes('ubicacion') || input.includes('ubicación') || input.includes('donde estan') || input.includes('dirección')) {
+                return "Estamos ubicados en Calle palo hincado las Malvinas a lado de la ferretería welinto";
+            } 
+            else if (input.includes('humano') || input.includes('persona') || input.includes('asesor')) {
+                return "Entiendo. Puedes contactar a nuestro soporte humano directamente al WhatsApp: +1 (809) 351-8848 📞.";
+            } 
+            else if (input.includes('gracias')) {
+                return "¡De nada! Estamos para servirte en MS.";
+            } 
+            else {
+                return "Lo siento, no entendí bien tu pregunta. ¿Podrías intentar con palabras clave como 'envíos', 'pagos' o 'ubicación'?";
+            }
+        }
+    </script>
+</body>
+</html>

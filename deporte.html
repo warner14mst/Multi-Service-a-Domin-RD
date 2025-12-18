@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Virtual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3e8e8;
+        }
+        header {
+            background-color: #d20000;
+            color: white; /* Cambiado a blanco para mejor contraste */
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            position: relative; /* Necesario para posicionar el botón */
+        }
+        /* Estilos del nuevo botón de registro */
+        .register-link {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            padding: 8px 15px;
+            background-color: #005e75; /* Color del botón de la tienda */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .register-link:hover {
+            background-color: #004a5e;
+        }
+        /* Fin de estilos del botón */
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background: white;
+        }
+        .search-bar input {
+            width: 50%;
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+        .search-bar button {
+            padding: 8px 15px;
+            background-color: #c9bb70f6;
+            border: none;
+            cursor: pointer;
+        }
+    
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background: rgb(134, 71, 71);
+            padding: 10px;
+        }
+        .categories a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        /* --- ESTILOS DE LA TIENDA --- */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* --- ESTILO DE LA TARJETA DEL PRODUCTO REGISTRADO --- */
+        .product {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+        }
+
+        .product img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .product h3 {
+            font-size: 1.2em;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        .product p {
+            font-size: 1.4em;
+            color: #d20000;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .product a {
+            display: block;
+            background-color: #005e75;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .product a:hover {
+            background-color: #004a5e;
+        }
+
+        .product-condition {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #c9bb70f6;
+            color: #333;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .H1{
+        text-align: center;
+        font-size: 30px;
+        color: rgb(167, 76, 76);
+    }
+    </style>
+</head>
+<body>
+
+    <header>
+        🏪 Tienda Virtual (Deportes)
+        <a href="Registrar Producto.html" class="register-link">➕ Registrar Producto</a>
+    </header>
+
+   <H1>Deportes</H1>
+
+    <div class="categories">
+        <a href="electronica.html">Electrónica</a>
+        <a href="hogar.html">Hogar</a>
+        <a href="#">Deportes</a>
+        <a href="#">Otros</a>
+    </div>
+
+    <div id="product-list" class="products-grid">
+        <div class="product">
+
+        </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadRegisteredProducts);
+
+        function loadRegisteredProducts() {
+            // 1. Obtener la lista de productos del localStorage
+            const storedProducts = localStorage.getItem('registeredProducts');
+            const products = storedProducts ? JSON.parse(storedProducts) : [];
+            const productListContainer = document.getElementById('product-list');
+
+            if (products.length > 0) {
+                // 2. Iterar sobre cada producto guardado
+                products.forEach(product => {
+                    // Crear el elemento de la tarjeta (div.product)
+                    const productCard = document.createElement('div');
+                    productCard.classList.add('product');
+
+                    // Llenar el contenido con los datos guardados, usando el Base64 en el 'src'
+                    productCard.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}">
+                        <span class="product-condition">${product.condition}</span>
+                        <h3>${product.name}</h3>
+                        <a href="#" target="_self"> comprar </a>
+                        <p>$${product.price}</p>
+                    `;
+
+                    // 3. Insertar la nueva tarjeta al inicio del contenedor
+                    productListContainer.prepend(productCard);
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

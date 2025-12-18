@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muro de Servicios - MS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #007bff;
+            --neon-blue: #00e1ff;
+            --dark-bg: #0a0a10;
+            --panel-bg: rgba(20, 20, 30, 0.95);
+            --text-white: #ffffff;
+            --card-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://img.freepik.com/free-photo/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette_1258-48251.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center center;
+            color: var(--text-white);
+            min-height: 100vh;
+        }
+
+        /* --- ESTILOS GLOBAL --- */
+        .navbar {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .brand {
+            font-size: 1.5em;
+            font-weight: 800;
+            color: var(--text-white);
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-publish {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .btn-publish:hover { background: var(--neon-blue); color: black; }
+
+        .wall-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        h1 { text-align: center; text-shadow: 2px 2px 4px black; margin-bottom: 30px; }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .service-card {
+            background: var(--panel-bg);
+            border: 1px solid #333;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--primary);
+            border-color: var(--neon-blue);
+        }
+
+        .edit-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        .edit-btn:hover { background: var(--neon-blue); color: black; }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .card-body { padding: 20px; }
+
+        .card-category {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .card-title { font-size: 1.4em; font-weight: bold; margin: 0 0 10px 0; color: var(--neon-blue); }
+        .card-desc { color: #ccc; font-size: 0.95em; line-height: 1.5; margin-bottom: 15px; }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .delete-btn { color: #ff4444; cursor: pointer; background: none; border: none; font-size: 0.9em; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-content {
+            background: #1a1a20;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 30px rgba(0, 123, 255, 0.5);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: none; border: none;
+            color: white; font-size: 1.5em; cursor: pointer;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: var(--neon-blue); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px;
+            background: #0a0a0a; border: 1px solid #444;
+            color: white; border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-group input:focus { border-color: var(--neon-blue); outline: none; }
+
+        .btn-submit {
+            width: 100%; padding: 12px;
+            background: var(--primary); color: white;
+            border: none; border-radius: 5px;
+            font-size: 1.1em; font-weight: bold; cursor: pointer;
+        }
+        .btn-submit:hover { background: var(--neon-blue); color: black; }
+        
+        /* ESTILOS ESPECÍFICOS DEL ACCESO EN EL MODAL */
+        .modal-access-panel {
+            text-align: center;
+            padding: 20px;
+        }
+        .modal-access-panel input[type="text"] {
+            font-size: 1.3em;
+            letter-spacing: 3px;
+        }
+        .modal-access-panel button {
+            margin-top: 15px;
+        }
+
+        /* --- ESTILOS DEL BOTÓN DE CONTACTO (LINK A MESSENGER) --- */
+        .btn-transaction-contact {
+            background: #008000; /* Verde oscuro */
+            color: white !important;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+            font-size: 0.9em;
+            box-shadow: 0 0 10px rgba(0, 128, 0, 0.5);
+        }
+
+        .btn-transaction-contact:hover {
+            background: #006400;
+        }
+        
+        /* --- ESTILOS DEL FOOTER --- */
+        #app-footer {
+            background: rgba(0, 0, 0, 0.95); 
+            color: var(--text-white);
+            padding: 30px 20px;
+            border-top: 2px solid var(--neon-blue); 
+            text-align: center;
+            font-size: 0.9em;
+            margin-top: 50px; 
+        }
+
+        .footer-brand {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--primary); 
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .footer-terms-text {
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            line-height: 1.6;
+            color: #bbb; 
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333; 
+            padding-top: 0; 
+        }
+
+        .footer-creators-section {
+            margin-top: 15px;
+        }
+
+        .footer-creators-title {
+            font-weight: bold;
+            color: var(--neon-blue); 
+            margin-bottom: 5px;
+            padding-top: 0; 
+        }
+
+        .footer-creator-name {
+            margin: 3px 0;
+            color: #aaa;
+            font-size: 0.9em;
+            padding-top: 0; 
+        }
+
+        /* 💡 ESTILOS DEL CHATBOT */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 500;
+        }
+        .chat-icon {
+            background: var(--primary); 
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
+        }
+        .chat-icon:hover { transform: scale(1.1); }
+        .chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 300px;
+            height: 400px;
+            background: #1a1a20;
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 225, 255, 0.4);
+            display: none; 
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-window.active { display: flex; }
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-header button { background: none; border: none; color: white; cursor: pointer; font-size: 1.2em; }
+        .chat-body {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background: #0a0a10;
+            display: flex;
+            flex-direction: column;
+        }
+        .message { margin-bottom: 10px; max-width: 80%; padding: 8px; border-radius: 10px; }
+        .bot-message { background: var(--panel-bg); color: white; align-self: flex-start; }
+        .user-message { background: var(--primary); color: white; align-self: flex-end; margin-left: auto; }
+        .quick-options { padding: 10px; background: #111; border-top: 1px solid #333; }
+        .quick-options button {
+            background: #333;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            padding: 5px 10px;
+            margin: 5px 5px 5px 0;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: 0.2s;
+        }
+        .quick-options button:hover { background: var(--neon-blue); color: black; }
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            background: #111;
+        }
+        .chat-input input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #444;
+            background: #0a0a0a;
+            color: white;
+            border-radius: 5px 0 0 5px;
+        }
+        .chat-input button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        /* FIN ESTILOS DEL CHATBOT */
+    </style>
+</head>
+<body onload="loadServices()">
+    
+    <div id="mainContent">
+        <nav class="navbar">
+            <div class="brand">
+                <i class="fas fa-tools"></i> Multi Service RD
+            </div>
+            <button class="btn-publish" onclick="openModal()">
+                <i class="fas fa-plus"></i> Publicar Servicio
+            </button>
+        </nav>
+
+        <div class="wall-container">
+            <h1>🛠 Muro de Servicios Disponibles🧰</h1>
+            <div class="services-grid" id="servicesGrid">
+            </div>
+        </div>
+        
+        <footer id="app-footer">
+            <div class="footer-brand">
+                Multi Service RD - MS
+            </div>
+            
+            <p class="footer-terms-text">
+                Términos y Condiciones y Política de Privacidad: Este Muro de Servicios es una plataforma interna. Al publicar, usted acepta que la información (título, descripción, contacto) es accesible localmente. La Política de Privacidad se limita a la no recopilación de datos por parte del sistema, ya que toda la información de los servicios se almacena únicamente en el almacenamiento local de su navegador.
+            </p>
+
+            <div class="footer-creators-section">
+                <p class="footer-creators-title">Creadores:</p>
+                <p class="footer-creator-name">José Gabriel Sosa</p>
+                <p class="footer-creator-name">Andrés Jasiel Eusebio Sánchez</p>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="modal-overlay" id="serviceModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <h2 id="modalTitle" style="text-align: center; color: var(--neon-blue);">Publicar Servicio</h2>
+            
+            <div id="modalAccessPanel" class="modal-access-panel">
+                <p style="color: #ccc;">🔐 Introduce el código de seguridad para acceder al formulario de publicación.</p>
+                <input type="text" id="modalAccessCodeInput" maxlength="4" placeholder="****">
+                <button class="btn-publish" onclick="checkModalAccessCode()">Continuar</button>
+                <p id="modalAccessFeedback" style="margin-top: 15px; font-weight: bold;"></p> 
+            </div>
+
+            <form id="serviceForm" style="display: none;">
+                <input type="hidden" id="serviceId"> 
+                <div class="form-group">
+                    <label>Categoría:</label>
+                    <select id="servCat" required>
+                        <option value="Electricidad">⚡ Electricidad</option>
+                        <option value="Refrigeración">❄️ Refrigeración</option>
+                        <option value="Plomería">🔧 Plomería</option>
+                        <option value="Tecnología">💻 Tecnología</option>
+                        <option value="Construcción">🧱 Construcción</option>
+                        <option value="Limpieza">🧹 Limpieza</option>
+                        <option value="Otros">🛠️ Otros</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Título del Anuncio:</label>
+                    <input type="text" id="servTitle" placeholder="Ej: Electricista Residencial 24/7" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Foto del Trabajo (URL o Local):</label>
+                    <input type="file" id="servImgInput" accept="image/*">
+                    <input type="hidden" id="servImgUrl"> 
+                    <small style="color:#aaa">Deja vacío para usar imagen genérica.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción:</label>
+                    <textarea id="servDesc" rows="3" placeholder="Describe tu experiencia, precios estimados, zona..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>WhatsApp / Teléfono:</label>
+                    <input type="number" id="servPhone" placeholder="Ej: 8095555555" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Guardar y Publicar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-icon" onclick="toggleChat()">
+            <i class="fas fa-headset"></i>
+        </div>
+
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                Soporte MS
+                <button onclick="toggleChat()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="message bot-message">¡Hola! Soy tu asistente virtual. ¿Cómo puedo ayudarte hoy?</div>
+            </div>
+            <div class="quick-options">
+                <button onclick="openRegistrationAndCloseChat()">📝 Publicar Servicio Ahora</button>
+                <button onclick="sendQuickMessage('¿Cómo funciona el Muro?')">❓Funcionamiento</button>
+                <button onclick="sendQuickMessage('Necesito soporte técnico')">💻 Soporte</button>
+                <button onclick="sendQuickMessage('Instrucciones de registro')">ℹ️ Instrucciones</button>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // --- CÓDIGOS DE ACCESO ---
+        const VALID_ACCESS_CODES = [
+            "8349", "1720", "4561", "9032", "6875", "5104", "2938", "7615", "3487", "0259", 
+            "8876", "1345", "4098", "9521", "6730", "3152", "0864", "7493", "5917", "2605", 
+            "1093", "6278", "8514", "4307", "9962", "5741", "2483", "7026", "3950", "0179", 
+            "6584", "3291", "0753", "8946", "1437", "4625", "9803", "7168", "5379", "2041", 
+            "7890", "4123", "9675", "0358", "3514", "2769", "5081", "1934", "6470", "8253", 
+            "0617", "3385", "5829", "9401", "4752", "9106", "6328", "2549", "1873", "7054", 
+            "3971", "8062", "5210", "4495", "0736", "1609", "7284", "3857", "9320", "5413", 
+            "8192", "0573", "6948", "2211", "4735", "7304", "5566", "1298", "8459", "3607", 
+            "0947", "6183", "2354", "4872", "9701", "5926", "1140", "7789", "3095", "8632", 
+            "4219", "9135", "0487", "6608", "2893", "3756", "8021", "5438", "1904", "7265"
+        ];
+
+        let isAuthorizedToPublish = false; 
+
+        // --- LÓGICA DE ACCESO DENTRO DEL MODAL ---
+        function checkModalAccessCode() {
+            const inputCode = document.getElementById('modalAccessCodeInput').value.trim();
+            const feedback = document.getElementById('modalAccessFeedback');
+            
+            if (VALID_ACCESS_CODES.includes(inputCode)) {
+                feedback.style.color = 'green';
+                feedback.innerText = '✅ Código correcto. Abriendo formulario...';
+                isAuthorizedToPublish = true; 
+                
+                document.getElementById('modalAccessPanel').style.display = 'none';
+                document.getElementById('serviceForm').style.display = 'block';
+                document.getElementById('modalTitle').innerText = 'Publicar Nuevo Servicio';
+                document.getElementById('modalAccessCodeInput').value = ''; 
+                feedback.innerText = ''; 
+                
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = '❌ Código incorrecto. Intenta de nuevo.';
+            }
+        }
+        
+        // --- LÓGICA DE MURO DE SERVICIOS Y MODAL ---
+        const modal = document.getElementById('serviceModal');
+        const form = document.getElementById('serviceForm');
+        
+        function openModal() {
+            document.getElementById('serviceForm').reset();
+            document.getElementById('serviceId').value = ''; 
+            document.getElementById('servImgUrl').value = ''; 
+            document.getElementById('servImgInput').value = ''; 
+            
+            if (isAuthorizedToPublish) {
+                document.getElementById('modalAccessPanel').style.display = 'none';
+                document.getElementById('serviceForm').style.display = 'block';
+                document.getElementById('modalTitle').innerText = 'Publicar Nuevo Servicio';
+            } else {
+                document.getElementById('modalAccessPanel').style.display = 'block';
+                document.getElementById('serviceForm').style.display = 'none';
+                document.getElementById('modalTitle').innerText = 'Acceso de Publicación';
+                document.getElementById('modalAccessFeedback').innerText = ''; 
+            }
+
+            modal.classList.add('active');
+        }
+
+        function editService(id) {
+            if (!isAuthorizedToPublish) {
+                openModal();
+                document.getElementById('modalAccessFeedback').style.color = 'red';
+                document.getElementById('modalAccessFeedback').innerText = '🔒 Necesitas introducir el código para editar.';
+                return;
+            }
+
+            const services = JSON.parse(localStorage.getItem('ms_services')) || [];
+            const service = services.find(s => s.id == id);
+
+            if (service) {
+                document.getElementById('serviceId').value = service.id;
+                document.getElementById('servCat').value = service.category;
+                document.getElementById('servTitle').value = service.title;
+                document.getElementById('servDesc').value = service.desc;
+                document.getElementById('servPhone').value = service.phone;
+                document.getElementById('servImgUrl').value = service.image; 
+                document.getElementById('servImgInput').value = ''; 
+                
+                document.getElementById('modalAccessPanel').style.display = 'none';
+                document.getElementById('serviceForm').style.display = 'block';
+
+                document.getElementById('modalTitle').innerText = 'Editar Servicio';
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!isAuthorizedToPublish) {
+                alert('ERROR: Necesitas un código de acceso válido para enviar el formulario.');
+                closeModal();
+                return;
+            }
+
+            if (!document.getElementById('servCat').value || !document.getElementById('servTitle').value || 
+                !document.getElementById('servDesc').value || !document.getElementById('servPhone').value) {
+                alert('Por favor, rellena todos los campos obligatorios antes de publicar.');
+                return;
+            }
+
+            const id = document.getElementById('serviceId').value;
+            const fileInput = document.getElementById('servImgInput');
+            const currentImgUrl = document.getElementById('servImgUrl').value;
+            
+            const newService = {
+                id: id ? id : Date.now(),
+                category: document.getElementById('servCat').value,
+                title: document.getElementById('servTitle').value,
+                desc: document.getElementById('servDesc').value,
+                phone: document.getElementById('servPhone').value,
+                image: currentImgUrl || ''
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(readerEvent) {
+                    newService.image = readerEvent.target.result;
+                    saveToLocalStorage(newService);
+                };
+                reader.onerror = function(error) {
+                    console.error('Error al leer el archivo (Revisar Consola):', error);
+                    alert('⚠️ Hubo un error al leer el archivo. Intenta con una imagen más pequeña o no selecciones ninguna.');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                if (!newService.image) {
+                    newService.image = getPlaceholderImage(newService.category);
+                }
+                saveToLocalStorage(newService);
+            }
+        });
+
+        function saveToLocalStorage(serviceObj) {
+            try {
+                let services = JSON.parse(localStorage.getItem('ms_services')) || [];
+                const index = services.findIndex(s => s.id == serviceObj.id);
+
+                if (index > -1) {
+                    services[index] = serviceObj;
+                } else {
+                    services.unshift(serviceObj);
+                }
+
+                localStorage.setItem('ms_services', JSON.stringify(services));
+                closeModal();
+                loadServices();
+                alert('¡Servicio publicado/editado con éxito!');
+            } catch (e) {
+                console.error('Error al guardar en LocalStorage:', e);
+                alert('❌ ERROR CRÍTICO: No se pudo guardar el servicio. Puede que el Local Storage esté lleno o deshabilitado.');
+            }
+        }
+
+        function deleteService(id) {
+            if (!isAuthorizedToPublish) {
+                alert('🔒 Necesitas un código de acceso válido para eliminar servicios.');
+                openModal();
+                return;
+            }
+
+            if(confirm('¿Seguro que quieres borrar este servicio?')) {
+                let services = JSON.parse(localStorage.getItem('ms_services')) || [];
+                services = services.filter(s => s.id != id);
+                localStorage.setItem('ms_services', JSON.stringify(services));
+                loadServices();
+            }
+        }
+
+        function loadServices() {
+            const grid = document.getElementById('servicesGrid');
+            const services = JSON.parse(localStorage.getItem('ms_services')) || [];
+            
+            grid.innerHTML = '';
+
+            if (services.length === 0) {
+                grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: #aaa;">No hay servicios publicados aún. ¡Sé el primero!</p>';
+                return;
+            }
+
+            services.forEach(s => {
+                // --- CONEXIÓN CRÍTICA CON EL APARTADO DE MENSAJERÍA ---
+                // Se codifican los parámetros y se redirige al archivo messenger.html
+                const serviceTitleEncoded = encodeURIComponent(s.title);
+                const messengerLink = `messenger.html?service=${serviceTitleEncoded}&contact=${s.phone}`;
+                // -----------------------------------------------------
+
+                const card = document.createElement('div');
+                card.className = 'service-card';
+                card.innerHTML = `
+                    <button class="edit-btn" onclick="editService(${s.id})" title="Editar mi servicio"><i class="fas fa-pen"></i></button>
+                    <img src="${s.image}" class="card-img" alt="Servicio">
+                    <div class="card-body">
+                        <span class="card-category">${s.category}</span>
+                        <h3 class="card-title">${s.title}</h3>
+                        <p class="card-desc">${s.desc}</p>
+                        
+                        <div class="card-footer">
+                            <a href="${messengerLink}" target="_blank" class="btn-transaction-contact">
+                                <i class="fas fa-handshake"></i> Contactar al Vendedor
+                            </a>
+                            
+                            <button class="delete-btn" onclick="deleteService(${s.id})">Borrar</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function getPlaceholderImage(cat) {
+            if(cat === 'Electricidad') return 'https://img.freepik.com/free-photo/electrician-working-switchboard_1098-18766.jpg';
+            if(cat === 'Plomería') return 'https://img.freepik.com/free-photo/plumber-fixing-sink-pipe-with-adjustable-wrench_23-2149359369.jpg';
+            if(cat === 'Refrigeración') return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxQ0H7Q3_d5YtG5Qj5J8X9X5X5X5X5X5X5X5X5w&s'; 
+            if(cat === 'Tecnología') return 'https://img.freepik.com/free-photo/technician-repairing-computer-computer-hardware-repairing-upgrade-technology_1150-8720.jpg';
+            return 'https://img.freepik.com/free-photo/handyman-with-tool-belt_1368-325.jpg';
+        }
+        // --- FIN LÓGICA DE MURO DE SERVICIOS ---
+
+        // --- LÓGICA DE CHATBOT ---
+        const chatWindow = document.getElementById('chatWindow');
+        const chatBody = document.getElementById('chatBody');
+        const chatInput = document.getElementById('chatInput');
+
+        function toggleChat() {
+            chatWindow.classList.toggle('active');
+        }
+
+        function appendMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.innerText = text;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        function openRegistrationAndCloseChat() {
+            toggleChat(); 
+            openModal();
+            
+            if (!isAuthorizedToPublish) {
+                document.getElementById('modalAccessFeedback').style.color = 'var(--neon-blue)';
+                document.getElementById('modalAccessFeedback').innerText = '🚨 Por favor, introduce tu código de publicación para continuar.';
+            }
+        }
+
+        function getBotResponse(input) {
+            const lowerInput = input.toLowerCase();
+
+            if (lowerInput.includes('hola') || lowerInput.includes('saludo')) {
+                return "¡Hola! Bienvenido al Muro de Servicios. ¿Quieres publicar un servicio? Haz clic en el botón '📝 Publicar Servicio Ahora' y te pediré el código de acceso.";
+            } 
+            else if (lowerInput.includes('registro') || lowerInput.includes('registrar') || lowerInput.includes('publicar')) {
+                return "Para publicar un servicio, haz clic en el botón **'📝 Publicar Servicio Ahora'** o en el botón principal 'Publicar Servicio'. El sistema te pedirá el código de seguridad.";
+            } 
+            else if (lowerInput.includes('funciona')) {
+                return "El Muro de Servicios es una plataforma donde los profesionales publican sus ofertas. Los clientes pueden contactarte directamente por WhatsApp/teléfono. Los datos se guardan solo en tu navegador (Local Storage).";
+            } else if (lowerInput.includes('soporte') || lowerInput.includes('técnico')) {
+                return "Para soporte técnico avanzado, por favor contacta al administrador. Si es un problema simple de la web, intenta refrescar la página.";
+            } else if (lowerInput.includes('gracias') || lowerInput.includes('adios')) {
+                return "¡Un placer ayudarte! Si necesitas algo más, no dudes en preguntar.";
+            } else {
+                return "Lo siento, no entendí tu pregunta. Intenta con una de las opciones rápidas o sé más específico.";
+            }
+        }
+
+        function sendQuickMessage(message) {
+            appendMessage('user', message);
+            setTimeout(() => {
+                const response = getBotResponse(message);
+                appendMessage('bot', response);
+            }, 500);
+        }
+
+        function sendMessage() {
+            const input = chatInput.value.trim();
+            if (input === "") return;
+
+            appendMessage('user', input);
+            chatInput.value = '';
+
+            setTimeout(() => {
+                const response = getBotResponse(input);
+                appendMessage('bot', response);
+            }, 500);
+        }
+    </script>
+</body>
+</html>

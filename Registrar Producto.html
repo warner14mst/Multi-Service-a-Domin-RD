@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Registro de Producto</title>
+    <link rel="stylesheet" href="estilo.css"> 
+    <style>
+        /* ESTILOS DE SOPORTE (mantener tus estilos de .image-preview, .confirmation-message, .preview-img, etc.) */
+        /* --- NUEVOS ESTILOS PARA LA PANTALLA DE ACCESO --- */
+        .access-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 70vh;
+            text-align: center;
+            padding: 20px;
+        }
+        .access-container h2 {
+            color: #d20000;
+            margin-bottom: 20px;
+        }
+        .access-container input[type="text"] {
+            padding: 10px;
+            font-size: 1.2em;
+            width: 200px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .access-container button {
+            padding: 10px 20px;
+            background-color: #005e75;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .access-container button:hover {
+            background-color: #004a5e;
+        }
+        .register-prompt {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .register-prompt a {
+            color: #d20000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .register-prompt a:hover {
+            text-decoration: underline;
+        }
+        /* Ocultar el formulario por defecto */
+        #registrationSection {
+            display: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <a href="tienda virtual.html" class="back-link">← Volver a la Tienda</a>
+        📝 Registro de Nuevo Producto
+    </header>
+
+    <main class="main-layout-container">
+        
+        <section id="accessSection" class="access-container">
+            <h2>🔐 Introduce tu Código de Acceso</h2>
+            <p>Este es un portal restringido para la administración de productos.</p>
+            <input type="text" id="accessCodeInput" maxlength="4" placeholder="CÓDIGO DE 4 DÍGITOS">
+            <button onclick="checkAccessCode()">Acceder al Formulario</button>
+
+            <div class="register-prompt">
+                ¿Aún no te has registrado?
+                <a href="formulari.html">Hazlo aquí</a>
+            </div>
+        </section>
+        
+        <section id="registrationSection" class="form-input-panel">
+            <h2>Datos del Producto</h2>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="productImage">Foto del Producto:</label>
+                    <input type="file" id="productImage" accept="image/*" required>
+                    <img id="imagePreview" src="#" alt="Previsualización de la imagen" class="image-preview">
+                </div>
+                <div class="form-group">
+                    <label for="productName">Nombre del Producto:</label>
+                    <input type="text" id="productName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productPrice">Precio del Producto:</label>
+                    <input type="number" id="productPrice" step="0.01" required>
+                </div>
+
+                <div class="form-group condition-group">
+                    <label>Condición:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="nuevo" name="condition" value="Nuevo" required>
+                        <label for="nuevo">Nuevo</label>
+                        
+                        <input type="radio" id="usado" name="condition" value="Usado">
+                        <label for="usado">Usado</label>
+                        
+                        <input type="radio" id="buenasCondiciones" name="condition" value="Buenas Condiciones">
+                        <label for="buenasCondiciones">Buenas Condiciones</label>
+
+                        <input href="mensajeria2.html" target="_self" type="radio" id="buenasCondiciones" name="condition" value="Buenas Condiciones">
+                        <label for="buenasCondiciones">enviar mensaje</label>
+                        
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">Guardar y Previsualizar</button>
+            </form>
+        </section>
+
+        <section class="product-preview-panel">
+            <h2>🛒 Tarjeta de Producto (Edición en Vivo)</h2>
+            <div id="productDisplay" class="product-card">
+                <p>Completa el formulario para ver la previsualización del producto.</p>
+            </div>
+            
+            <p class="edit-hint">
+                *Nota: Haz **doble clic** en el Nombre o el Precio de la tarjeta para **editar en vivo**.
+            </p>
+        </section>
+    </main>
+
+    <div id="confirmationMessage" class="confirmation-message"></div>
+
+    <script>
+        // 🔑 LISTA DE CÓDIGOS DE ACCESO (MÁS 100 EJEMPLOS)
+        const VALID_ACCESS_CODES = [
+            "8349", "1720", "4561", "9032", "6875", "5104", "2938", "7615", "3487", "0259", 
+            "8876", "1345", "4098", "9521", "6730", "3152", "0864", "7493", "5917", "2605", 
+            "1093", "6278", "8514", "4307", "9962", "5741", "2483", "7026", "3950", "0179", 
+            "6584", "3291", "0753", "8946", "1437", "4625", "9803", "7168", "5379", "2041", 
+            "7890", "4123", "9675", "0358", "3514", "2769", "5081", "1934", "6470", "8253", 
+            "0617", "3385", "5829", "9401", "4752", "9106", "6328", "2549", "1873", "7054", 
+            "3971", "8062", "5210", "4495", "0736", "1609", "7284", "3857", "9320", "5413", 
+            "8192", "0573", "6948", "2211", "4735", "7304", "5566", "1298", "8459", "3607", 
+            "0947", "6183", "2354", "4872", "9701", "5926", "1140", "7789", "3095", "8632", 
+            "4219", "9135", "0487", "6608", "2893", "3756", "8021", "5438", "1904", "7265"
+        ];
+
+        // 🔑 FUNCIÓN DE VERIFICACIÓN DE ACCESO
+        function checkAccessCode() {
+            const inputCode = document.getElementById('accessCodeInput').value.trim();
+            
+            if (VALID_ACCESS_CODES.includes(inputCode)) {
+                // Éxito: Ocultar acceso y mostrar formulario
+                document.getElementById('accessSection').style.display = 'none';
+                document.getElementById('registrationSection').style.display = 'block';
+                showConfirmation('✅ Acceso concedido. Bienvenido/a al registro de productos.');
+            } else {
+                // Error
+                showConfirmation('❌ Código incorrecto. Intenta con un código válido de 4 dígitos.', true);
+            }
+        }
+        
+        // 🔑 FUNCIÓN CLAVE: Convierte el archivo de imagen a Base64 (texto)
+        function fileToBase64(file) {
+             return new Promise((resolve, reject) => {
+                 const reader = new FileReader();
+                 reader.readAsDataURL(file);
+                 reader.onload = () => resolve(reader.result);
+                 reader.onerror = error => reject(error);
+             });
+        }
+
+        // Función para mostrar el mensaje de confirmación flotante (Mantener)
+        function showConfirmation(message, isError = false) {
+             const msgBox = document.getElementById('confirmationMessage');
+             msgBox.innerText = message;
+             msgBox.className = 'confirmation-message show';
+             if (isError) {
+                 msgBox.classList.add('error');
+             } else {
+                 msgBox.classList.remove('error');
+             }
+
+             setTimeout(() => {
+                 msgBox.className = 'confirmation-message';
+             }, 3000);
+        }
+        
+        // 1. Previsualización de Imagen (Temporal) (Mantener)
+        document.getElementById('productImage').addEventListener('change', function(event) {
+             const [file] = event.target.files;
+             const preview = document.getElementById('imagePreview');
+             if (file) {
+                 preview.src = URL.createObjectURL(file);
+                 preview.style.display = 'block';
+             } else {
+                 preview.style.display = 'none';
+             }
+        });
+
+        // 2. Manejo del Formulario y Guardado (Mantener)
+        document.getElementById('productForm').addEventListener('submit', async function(event) {
+             event.preventDefault();
+
+             try {
+                 const name = document.getElementById('productName').value;
+                 const price = parseFloat(document.getElementById('productPrice').value).toFixed(2);
+                 const conditionElement = document.querySelector('input[name="condition"]:checked');
+                 const imageFile = document.getElementById('productImage').files[0];
+                 
+                 if (!conditionElement) {
+                     showConfirmation('Error: Debes seleccionar la condición del producto.', true);
+                     return;
+                 }
+                 if (!imageFile) {
+                     showConfirmation('Error: Debes seleccionar una imagen para el producto.', true);
+                     return;
+                 }
+
+                 const condition = conditionElement.value;
+                 const imageBase64 = await fileToBase64(imageFile); 
+                 
+                 const newProduct = {
+                     name: name,
+                     price: price,
+                     condition: condition,
+                     image: imageBase64
+                 };
+
+                 let products = JSON.parse(localStorage.getItem('registeredProducts')) || [];
+                 products.push(newProduct);
+                 localStorage.setItem('registeredProducts', JSON.stringify(products));
+                 
+                 const displayArea = document.getElementById('productDisplay');
+                 
+                 displayArea.innerHTML = `
+                     <img src="${imageBase64}" alt="${name}" class="preview-img">
+                     <h3 contenteditable="true" id="editableName" title="Doble clic para editar">${name}</h3>
+                     <p class="preview-condition">Condición: <span>${condition}</span></p>
+                     <p class="preview-price" contenteditable="true" id="editablePrice" title="Doble clic para editar">$${price}</p>
+                     <button class="btn-save-edit" onclick="saveEdit()">Guardar Edición</button>
+                 `;
+                 
+                 showConfirmation(`✅ Producto "${name}" registrado y ¡GUARDADO!`);
+                 displayArea.scrollIntoView({ behavior: 'smooth' });
+
+             } catch(e) {
+                 console.error("Error de registro:", e);
+                 showConfirmation('Error: No se pudo procesar la imagen. Intenta con una imagen más pequeña.', true);
+             }
+        });
+
+        // 3. Función de Guardado de Edición (Mantener)
+        function saveEdit() {
+             const newName = document.getElementById('editableName').innerText;
+             const newPrice = document.getElementById('editablePrice').innerText;
+             
+             showConfirmation(`💾 Edición de "${newName}" guardada. Precio: ${newPrice}`);
+        }
+    </script>
+</body>
+</html>

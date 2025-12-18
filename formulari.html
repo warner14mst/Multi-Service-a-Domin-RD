@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Multi Service a Domin RD</title>
+    <style>
+        /* [Se mantienen todos tus estilos CSS existentes] */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #a9a4ce;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: url("Gemini_Generated_Image_q1ya9nq1ya9nq1ya.png");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center center;
+        }
+
+        .form-container {
+            background-color: #c2c1cc;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.45);
+            width: 100%;
+            max-width: 550px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: #333333;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        .profile-picture-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        #profile-picture-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #cccccc;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            background-color: #f0f0f0;
+        }
+
+        .upload-button {
+            display: inline-block;
+            background-color: #555555;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-button:hover {
+            background-color: #333333;
+        }
+
+        #profile-picture-upload {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #555555;
+            font-size: 15px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            color: #333333;
+            font-size: 16px;
+            background-color: #f9f9f9;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #888888;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .submit-button {
+            background-color: #34495e;
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #485b70;
+            transform: translateY(-2px);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+        /* Estilo para el mensaje de éxito */
+        .success-message {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            display: none; /* Oculto por defecto */
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Registro de Usuario</h2>
+    
+    <div class="profile-picture-container">
+        <img id="profile-picture-preview" src="https://via.placeholder.com/120/cccccc/ffffff?text=+" alt="Foto de perfil">
+        <input type="file" id="profile-picture-upload" accept="image/*">
+        <label for="profile-picture-upload" class="upload-button">Subir Foto</label>
+    </div>
+
+    <form id="registroForm">
+        
+        <div class="form-group">
+            <label for="perfil">Perfil</label>
+            <select id="perfil" name="perfil" required>
+                <option value="" disabled selected>Selecciona un perfil</option>
+                <option value="cliente">Cliente</option>
+                <option value="administrador">Administrador</option>
+                <option value="otro">Otro</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="perfil_vendedor">Perfil de Vendedor</label>
+            <select id="perfil_vendedor" name="perfil_vendedor" required>
+                <option value="" disabled selected>¿Es vendedor?</option>
+                <option value="si">Sí</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="nombre">Nombre Completo</label>
+            <input type="text" id="nombre" name="nombre_completo" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input type="email" id="email" name="correo_electronico" required>
+        </div>
+        
+        <button type="submit" class="submit-button">Registrar</button>
+    </form>
+    
+    <div id="successMessage" class="success-message">
+        ¡Registro exitoso! El usuario ha sido guardado.
+    </div>
+</div>
+
+<script>
+    // Lógica para la previsualización de la foto
+    document.getElementById('profile-picture-upload').addEventListener('change', function(event) {
+        const [file] = event.target.files;
+        if (file) {
+            document.getElementById('profile-picture-preview').src = URL.createObjectURL(file);
+            document.querySelector('.upload-button').textContent = 'Cambiar Foto';
+        }
+    });
+
+    // Lógica para el guardado de datos
+    document.getElementById('registroForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Evita el envío tradicional del formulario
+
+        // 1. Recopilar datos
+        const newUserId = Date.now(); // ID único basado en la hora
+        const newUser = {
+            id: newUserId,
+            perfil: document.getElementById('perfil').value,
+            perfilVendedor: document.getElementById('perfil_vendedor').value,
+            nombre: document.getElementById('nombre').value,
+            email: document.getElementById('email').value,
+            // La foto se manejaría con Base64, pero para simplicidad, solo guardamos el texto aquí.
+            timestamp: new Date().toLocaleString()
+        };
+
+        // 2. Cargar datos existentes o inicializar
+        let users = [];
+        const storedUsers = localStorage.getItem('ms_usuarios');
+        if (storedUsers) {
+            users = JSON.parse(storedUsers);
+        }
+
+        // 3. Añadir nuevo usuario
+        users.push(newUser);
+
+        // 4. Guardar la lista actualizada en LocalStorage
+        localStorage.setItem('ms_usuarios', JSON.stringify(users));
+
+        // 5. Mostrar mensaje de éxito y resetear formulario
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('registroForm').reset();
+        
+        // Ocultar el mensaje después de unos segundos
+        setTimeout(() => {
+            document.getElementById('successMessage').style.display = 'none';
+        }, 3000);
+    });
+</script>
+
+</body>
+</html>

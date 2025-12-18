@@ -1,0 +1,341 @@
+/* Estilos base */
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #5b769b; /* Fondo ligero para que se vea la barra */
+}
+
+
+
+
+/* Estilos al pasar el ratón (hover) */
+.navbar-links a:hover {
+    color: #cc00ff; /* Cambia a azul al pasar el ratón */
+    }
+
+img{
+height: 100px;
+width: 155px;
+position: relative;
+border-radius: 300px;
+float: right;
+}
+
+.container{
+    background: rgb(230, 227, 223);
+   
+/* 1. Definir que el contenedor ocupe toda la altura de la página */
+    height: 700px; /* 'vh' significa 'viewport height' */
+    width: 100%;
+    /* 2. Activar Flexbox en el contenedor */
+    display: flex;
+
+    /* 3. Centrar el contenido (el box) horizontalmente */
+    justify-content: center;
+
+    /* 4. Centrar el contenido (el box) verticalmente */
+    align-items: center;
+
+    /* Opcional: para ver el contenedor */
+ 
+ background-attachment: fixed;
+    /* 4. Hace que la imagen cubra todo el body, recortando si es necesario */
+    background-size: cover;
+    
+    /* 5. Centra la imagen en el body */
+    background-position: center center;
+    
+    background-image: url("Gemini_Generated_Image_q1ya9nq1ya9nq1ya.png");
+
+}
+
+
+
+
+.box{
+    color: rgb(236, 238, 237);
+   font-family: Arial, Helvetica, sans-serif;
+ border-radius: SOLID 3px BLUE;
+font-size: 25px;
+height:400px;
+width:800px
+ ;
+    
+}
+
+.box:hover{
+    color: #6ac47e;
+text-shadow: 
+        10px 10px 20px #333, 
+        0 0 15px rgba(0, 255, 85, 0.8);
+}
+
+
+/* --- ESTILOS DEL FOOTER --- */
+#app-footer {
+    background: rgba(0, 0, 0, 0.95); /* Fondo muy oscuro */
+    color: var(--text-white);
+    padding: 30px 20px;
+    border-top: 2px solid var(--neon-blue); /* Línea divisoria de neón */
+    text-align: center;
+    font-size: 0.9em;
+    margin-top: 50px; /* Separación del contenido principal */
+}
+
+.footer-brand {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: var(--primary); /* Color principal azul */
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Estilo para el párrafo de términos y condiciones (clase única) */
+.footer-terms-text {
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    line-height: 1.6;
+    color: #bbb; 
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333; 
+    /* Sobrescribe cualquier estilo genérico de <p> */
+    padding-top: 0; 
+}
+
+.footer-creators-section {
+    margin-top: 15px;
+}
+
+/* Estilo para el título Creadores (clase única) */
+.footer-creators-title {
+    font-weight: bold;
+    color: var(--neon-blue); 
+    margin-bottom: 5px;
+    /* Sobrescribe cualquier estilo genérico de <p> */
+    padding-top: 0; 
+}
+
+/* Estilo para los nombres de los creadores (clase única) */
+.footer-creator-name {
+    margin: 3px 0;
+    color: #aaa;
+    font-size: 0.9em;
+    /* Sobrescribe cualquier estilo genérico de <p> */
+    padding-top: 0; 
+}
+
+
+
+
+
+
+
+
+
+
+h1{
+color: #03947c;
+}
+.foto{
+    width: 50px;
+    height: 50px;
+   border: solid 3px blue;
+   right: -25%;
+}
+
+
+.funiones{
+    display: block;
+    align-content: center;
+    background-color: #c0bac7;
+    width: 100%px;
+    height: 100%;
+    align-items: center;
+background-image: url("Gemini_Generated_Image_q1ya9nq1ya9nq1ya.png");
+
+
+
+
+background-repeat: no-repeat;
+    
+    /* 3. Fija la imagen para que no se mueva al hacer scroll (opcional) */
+    background-attachment: fixed;
+    
+    /* 4. Hace que la imagen cubra todo el body, recortando si es necesario */
+    background-size: cover;
+    
+    /* 5. Centra la imagen en el body */
+    background-position: center center;
+    
+    /* 6. Si usas background-size: cover, es buena idea definir un color de respaldo */
+    background-color: #333;
+}
+
+.funciones-apartado{
+ font-size: 25px;
+ background-color: transparent;
+ width: 400px;
+ height: 400px;
+ justify-content: center;
+ border-radius: solid 3px;
+ border-radius: 30px;
+ outline: 3px solid blue;
+ outline-offset: 5px;
+color: #d6cce2;
+}
+
+
+
+/* --- VARIABLES --- */
+:root {
+    --header-height: 70px; /* Altura de la barra superior */
+    --menu-width: 250px; /* Ancho de la barra lateral */
+    --color-main: #007bff; /* Azul primario */
+    --color-menu-bg: #2c3e50; /* Fondo del menú lateral */
+    --transition-speed: 0.3s;
+}
+
+/* --- ESTILOS BASE --- */
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* --- BARRA SUPERIOR (HEADER) --- */
+.app-header {
+    background-color: #ffffff;
+    padding: 0 30px;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    /* POSICIONAMIENTO FIJO */
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 101; /* Siempre encima */
+    box-sizing: border-box; 
+}
+
+/* Botón de Menú */
+.menu-opener {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #333;
+    margin-right: 20px;
+    transition: color var(--transition-speed);
+}
+
+/* Nombre de la Marca */
+.app-brand-name {
+    font-size: 50px;
+    font-weight: bold;
+    color: #380b6b;
+    flex-grow: 1;
+    text-align: center;
+font-family: 'Times New Roman', Times, serif;
+}
+
+/* Enlaces Sociales (Redes) */
+.social-nav-links {
+    display: flex;
+    gap: 30px;
+}
+.social-nav-links a {
+    color: #333;
+    font-size: 1.5em;
+    transition: color var(--transition-speed);
+    text-decoration: none;
+}
+.social-nav-links a:hover {
+    color: var(--color-main);
+}
+
+
+/* --- BARRA LATERAL (ASIDE MENU) --- */
+.app-menu-aside {
+    width: var(--menu-width);
+    background-color: var(--color-menu-bg);
+    color: white;
+    padding-top: 20px;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    
+    /* POSICIONAMIENTO CLAVE */
+    position: fixed;
+    top: var(--header-height); /* Comienza debajo de la barra superior */
+    left: 0;
+    /* Ocupa el resto de la altura de la vista */
+    height: calc(100vh - var(--header-height)); 
+    z-index: 100;
+    transition: transform var(--transition-speed); 
+}
+
+/* Estado OCULTO (Desplegable) */
+.app-menu-aside.is-hidden {
+    /* Mueve la barra completamente fuera de la pantalla a la izquierda */
+    transform: translateX(calc(0px - var(--menu-width))); 
+}
+
+/* Enlaces del Menú Lateral */
+.menu-links-container {
+    padding-top: 0;
+}
+
+.menu-item-link {
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 1.1em;
+    color: #ecf0f1;
+    display: block;
+    transition: background-color var(--transition-speed);
+    white-space: nowrap; 
+}
+
+.menu-item-link:hover {
+    background-color: #34495e;
+}
+
+.menu-item-link i {
+    margin-right: 10px;
+    width: 20px;
+}
+
+
+/* --- CONTENIDO PRINCIPAL (MAIN) --- */
+.main-content-area {
+    /* POSICIONAMIENTO CLAVE */
+    /* Crea el espacio para el menú lateral */
+    margin-left: var(--menu-width); 
+    /* Crea el espacio para la barra superior */
+    padding-top: var(--header-height);
+    
+    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    transition: margin-left var(--transition-speed);
+    min-height: calc(100vh - var(--header-height)); 
+}
+
+/* Estado del Contenido cuando el Menú está OCULTO */
+.main-content-area.menu-hidden {
+    /* El contenido regresa a la izquierda */
+    margin-left: 0; 
+}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,269 @@
+/* --- VARIABLES basadas en tu Tienda Virtual --- */
+:root {
+    --color-header: #290da5; 
+    --color-text-header: #9da803;
+    --color-accent: #c9bb70f6;
+    --color-categories: rgb(134, 71, 71); 
+    --color-background: #f3e8e8;
+    --color-text: #333;
+    --color-primary: #007bff; 
+    --color-success: #28a745;
+    --color-error: #dc3545;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background);
+  background-image: url("Gemini_Generated_Image_q1ya9nq1ya9nq1ya.png");
+  background-repeat: no-repeat;
+    
+    /* 3. Fija la imagen para que no se mueva al hacer scroll (opcional) */
+    background-attachment: fixed;
+    
+    /* 4. Hace que la imagen cubra todo el body, recortando si es necesario */
+    background-size: cover;
+    
+    /* 5. Centra la imagen en el body */
+    background-position: center center;
+}
+
+/* --- ESTILOS DEL HEADER DE REGISTRO --- */
+.app-header {
+    background-color: var(--color-header);
+    color: var(--color-text-header);
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Enlace de regreso a la tienda */
+.back-link {
+    position: absolute;
+    left: 20px;
+    background-color: #00000030;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 4px;
+    font-weight: normal;
+    transition: background-color 0.3s;
+}
+
+.back-link:hover {
+    background-color: #00000050;
+}
+
+/* --- LAYOUT PRINCIPAL (Contenedor de dos columnas) --- */
+.main-layout-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    gap: 30px;
+}
+
+/* Estilos de las dos columnas */
+.form-input-panel, .product-preview-panel {
+    flex: 1;
+    padding: 15px;
+}
+
+/* Títulos de sección */
+h2 {
+    color: var(--color-header);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+/* --- ESTILOS DEL FORMULARIO --- */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--color-text);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
+    margin-top: 5px;
+}
+
+.image-preview {
+    max-width: 100px;
+    height: auto;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: none; 
+}
+
+/* Condición Radio Buttons */
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.radio-group input[type="radio"] {
+    display: none; 
+}
+
+.radio-group label {
+    font-weight: normal;
+    padding: 8px 12px;
+    border: 1px solid var(--color-categories);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: var(--color-categories);
+}
+
+.radio-group input[type="radio"]:checked + label {
+    background-color: var(--color-categories);
+    color: white;
+    border-color: var(--color-categories);
+}
+
+/* Botón de Envío */
+.btn-submit {
+    background-color: var(--color-accent);
+    color: var(--color-text);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: opacity 0.3s;
+    width: 100%;
+    font-weight: bold;
+}
+
+.btn-submit:hover {
+    opacity: 0.8;
+}
+
+/* --- SECCIÓN DE PREVISUALIZACIÓN (PRODUCT CARD) --- */
+.product-card {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    min-height: 250px;
+}
+
+.product-card h3 {
+    color: blue; 
+    margin: 10px 0;
+    padding: 5px;
+    transition: background-color 0.3s;
+}
+
+.product-card p.preview-price {
+    color: green; 
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 5px;
+    transition: background-color 0.3s;
+}
+
+/* Estilo clave para la EDICIÓN EN VIVO ("por fuera") */
+.product-card [contenteditable="true"]:hover {
+    background-color: #fff0d9;
+    cursor: text;
+}
+.product-card [contenteditable="true"]:focus {
+    outline: 2px dashed var(--color-primary);
+}
+
+
+.preview-img {
+    max-width: 150px;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.preview-condition span {
+    background-color: var(--color-categories);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.btn-save-edit {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.btn-save-edit:hover {
+    background-color: #0056b3;
+}
+
+.edit-hint {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+}
+
+/* --- ESTILOS: MENSAJE DE CONFIRMACIÓN FLOTANTE (TOAST) --- */
+
+.confirmation-message {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px; 
+    background-color: var(--color-success); 
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 16px;
+    position: fixed;
+    z-index: 10;
+    left: 50%;
+    bottom: 30px; 
+    font-size: 16px;
+    
+    opacity: 0;
+    transition: opacity 0.5s linear;
+}
+
+.confirmation-message.error {
+    background-color: var(--color-error); 
+}
+
+.confirmation-message.show {
+    visibility: visible;
+    opacity: 1;
+}

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajería MS - Apartado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Variables de Color */
+        :root {
+            --primary: #007bff;
+            --neon-blue: #00e1ff;
+            --dark-bg: #0a0a10;
+            --panel-bg: rgba(20, 20, 30, 0.95);
+            --text-white: #ffffff;
+            --messenger-bg: #1a1a20; 
+            --sidebar-bg: #111115; 
+        }
+
+        /* Estilos Base */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-white);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Contenedor Principal (Estilo Facebook Messenger) */
+        #messengerApartado {
+            display: flex;
+            width: 95%;
+            max-width: 1300px;
+            height: 90vh;
+            background: var(--messenger-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 123, 255, 0.3);
+            border: 1px solid var(--primary);
+        }
+
+        /* BARRA LATERAL (CONTACTOS) */
+        .messenger-sidebar {
+            width: 300px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid #333;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--neon-blue);
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-bottom: 1px solid #1a1a20;
+        }
+        .contact-item:hover, .contact-item.active {
+            background: rgba(0, 123, 255, 0.2);
+        }
+
+        .contact-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .contact-info strong {
+            display: block;
+            color: var(--text-white);
+        }
+        .contact-info span {
+            font-size: 0.8em;
+            color: #aaa;
+        }
+
+        /* VENTANA PRINCIPAL DE CHAT */
+        .messenger-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--primary);
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-body {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #111;
+        }
+
+        /* Estilos de Mensajes */
+        .message-bubble {
+            max-width: 60%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            line-height: 1.4;
+            position: relative;
+        }
+        .message-sender {
+            align-self: flex-start;
+            background: #333;
+            color: white;
+            border-top-left-radius: 5px;
+        }
+        .message-receiver {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-top-right-radius: 5px;
+        }
+
+        /* Input de Chat */
+        .chat-input {
+            padding: 15px 20px;
+            background: var(--panel-bg);
+            border-top: 1px solid #333;
+            display: flex;
+        }
+        .chat-input input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid #444;
+            background: #333;
+            color: white;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+        .chat-input button {
+            background: var(--neon-blue);
+            color: black;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .chat-input button:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        #welcome-message {
+            text-align: center;
+            margin: auto;
+            color: #bbb;
+        }
+
+    </style>
+</head>
+<body onload="loadContacts()">
+    
+    <div id="messengerApartado">
+        
+        <div class="messenger-sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-comment-dots"></i> Mensajes MS
+            </div>
+            <div id="contactList">
+                </div>
+        </div>
+        
+        <div class="messenger-main">
+            <div class="chat-header" id="chatHeader">
+                <i class="fas fa-user-circle"></i> Selecciona un contacto para chatear
+            </div>
+            
+            <div class="chat-body" id="chatBody">
+                <p id="welcome-message">
+                    Inicia una conversación seleccionando un servicio en la barra lateral.
+                </p>
+            </div>
+            
+            <div class="chat-input" id="chatInputArea" style="display:none;">
+                <input type="text" id="messageInput" placeholder="Escribe un mensaje..." onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        
+        // --- DATA DE SIMULACIÓN ---
+        let SIMULATED_CONTACTS = [
+            { id: 1, name: "Electricista Juan P.", phone: "8095551234", lastMessage: "Servicio de urgencia disponible.", avatar: "JP" },
+            { id: 2, name: "Plomero Ricardo G.", phone: "8095555678", lastMessage: "Necesito confirmar la dirección.", avatar: "RG" },
+            { id: 3, name: "Técnico Laura M.", phone: "8095559012", lastMessage: "Sí, podemos repararlo mañana.", avatar: "LM" },
+        ];
+        
+        let activeChatId = null;
+
+        
+        function loadContacts() {
+            const contactList = document.getElementById('contactList');
+            contactList.innerHTML = '';
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const serviceName = urlParams.get('service');
+            const contactPhone = urlParams.get('contact');
+
+            let serviceContactId = null;
+
+            if (serviceName && contactPhone) {
+                // 1. Si vienen parámetros, crea el nuevo contacto de transacción
+                serviceContactId = `S-${contactPhone}`; 
+                
+                if (!SIMULATED_CONTACTS.some(c => c.id === serviceContactId)) {
+                    SIMULATED_CONTACTS.unshift({ 
+                        id: serviceContactId, 
+                        name: serviceName, 
+                        phone: contactPhone, 
+                        lastMessage: `Interesado en ${serviceName}.`, 
+                        avatar: serviceName.substring(0, 2).toUpperCase() 
+                    });
+                }
+            }
+
+
+            // 2. Renderiza la lista de contactos
+            SIMULATED_CONTACTS.forEach(contact => {
+                const item = document.createElement('div');
+                item.className = 'contact-item';
+                item.setAttribute('data-id', contact.id);
+                item.onclick = () => openChat(contact.id, contact.name);
+                
+                item.innerHTML = `
+                    <div class="contact-avatar">${contact.avatar}</div>
+                    <div class="contact-info">
+                        <strong>${contact.name}</strong>
+                        <span>${contact.lastMessage}</span>
+                    </div>
+                `;
+                contactList.appendChild(item);
+            });
+
+            // 3. Si un servicio fue seleccionado por URL, abre el chat automáticamente
+            if (serviceContactId) {
+                openChat(serviceContactId, serviceName, true); // true para mensaje automático
+            }
+        }
+        
+        function openChat(id, name, isNewTransaction = false) {
+            // Desactiva el contacto anterior y activa el nuevo
+            if (activeChatId) {
+                const prevActive = document.querySelector(`.contact-item[data-id="${activeChatId}"]`);
+                if (prevActive) prevActive.classList.remove('active');
+            }
+            activeChatId = id;
+            const currentActive = document.querySelector(`.contact-item[data-id="${id}"]`);
+            if (currentActive) currentActive.classList.add('active');
+
+            // Actualiza el header
+            const contact = SIMULATED_CONTACTS.find(c => c.id === id);
+            document.getElementById('chatHeader').innerHTML = `
+                <div class="contact-avatar">${contact.avatar}</div> 
+                ${contact.name} 
+                <span style="font-size: 0.7em; color: #ccc;">(${contact.phone})</span>
+            `;
+            
+            if (isNewTransaction) {
+                loadInitialTransactionMessages(id, name, contact.phone);
+            } else {
+                 loadSimulatedMessages(id);
+            }
+            
+            document.getElementById('chatInputArea').style.display = 'flex';
+        }
+
+        // --- FUNCIÓN PARA MENSAJES DE INICIO DE TRANSACCIÓN ---
+        function loadInitialTransactionMessages(chatId, serviceName, contactPhone) {
+            const chatBody = document.getElementById('chatBody');
+            chatBody.innerHTML = ''; 
+
+            appendMessage("¡Hola! Gracias por contactarme. ¿En qué puedo ayudarte?", 'sender');
+
+            const initialMessage = `Estoy interesado en su servicio: "${serviceName}". Por favor, ¿podría darme más detalles o indicarme su precio?`;
+            appendMessage(initialMessage, 'receiver');
+
+            setTimeout(() => {
+                appendMessage(`Perfecto. Para el servicio de "${serviceName}", el contacto es ${contactPhone}. Dime tu ubicación para cotizar.`, 'sender');
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1500);
+            
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        // -------------------------------------------------------------
+
+        function loadSimulatedMessages(chatId) {
+            const chatBody = document.getElementById('chatBody');
+            chatBody.innerHTML = ''; 
+            
+            const messages = [
+                { text: `Hola, ¿está disponible el servicio de ${SIMULATED_CONTACTS.find(c => c.id === chatId).name}?`, type: 'receiver' },
+                { text: "Sí, claro. ¿Cuál es su ubicación y qué necesita exactamente?", type: 'sender' },
+                { text: "Necesito un presupuesto.", type: 'receiver' },
+                { text: "Envíame los detalles por favor.", type: 'sender' }
+            ];
+
+            messages.forEach(msg => {
+                appendMessage(msg.text, msg.type);
+            });
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function appendMessage(text, type) {
+            const chatBody = document.getElementById('chatBody');
+            const bubble = document.createElement('div');
+            bubble.className = `message-bubble message-${type}`;
+            bubble.innerText = text;
+            chatBody.appendChild(bubble);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (text === "") return;
+            
+            appendMessage(text, 'receiver');
+            input.value = '';
+
+            setTimeout(() => {
+                appendMessage("Mensaje enviado. El vendedor recibirá la notificación. Por favor, sé paciente.", 'sender');
+                document.getElementById('chatBody').scrollTop = document.getElementById('chatBody').scrollHeight;
+            }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadContacts);
+
+    </script>
+</body>
+</html>
